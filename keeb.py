@@ -1,22 +1,25 @@
 from pynput import keyboard
+from subprocess import call
+import os
 
 # The key combination to check
-COMBINATION = [{keyboard.Key.ctrl, keyboard.KeyCode.from_char('s')},
-			   {keyboard.Key.ctrl, keyboard.KeyCode.from_char('a')}]
+# Uses python map (key, value) data structure called dictionary
+COMBINATION = dict([('firefox', {keyboard.Key.ctrl, keyboard.Key.alt, keyboard.KeyCode.from_char('b')}),
+					('chromium-browser', {keyboard.Key.ctrl, keyboard.Key.alt, keyboard.KeyCode.from_char('a')})])
 
 # The currently active modifiers
 current = set()
 
 
 def on_press(key):
-	for i in COMBINATION:
-	    if key in i:
+	# Checking if current key combination exists in COMBINATION structure
+	for index, value in COMBINATION.iteritems():
+	    if key in value:
 	        current.add(key)
-	        if all(k in current for k in i):
-	            print('All modifiers active!')
+	        if all(k in current for k in value):
+	        	call([index])
 	    if key == keyboard.Key.esc:
 	        listener.stop()
-
 
 def on_release(key):
     try:
@@ -24,6 +27,6 @@ def on_release(key):
     except KeyError:
         pass
 
-
+# Initializing keyboard listener
 with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
     listener.join()
