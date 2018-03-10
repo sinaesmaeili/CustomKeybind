@@ -3,14 +3,20 @@ COMP3000 Custom Keybind Application
 
 ## Quick Start
 
-Install dependencies
+- Make sure modules are up to date (look at Installing and saving dev modules below)
+- Save program as executable: `pyinstaller test.py`
+- Traverse to `/dist/test` and run the executable
+
+
+## Installing and saving dev modules
+
+For isntalling new dependencies
 ```
 pip install -r requirments.txt
 ```
 
-## Save modules
-
-Save to requirements.txt
+For recently added modules to requirements.txt
 ```
 pip freeze > requirements.txt
 ```
+
