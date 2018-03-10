@@ -14,7 +14,7 @@ class Window(Frame):
 		Frame.__init__(self, master)
 		self.master = master
 		self.init_window()
-	
+
 	def init_window(self):
 		self.master.title("Custom Keybindings")
 		
@@ -40,7 +40,7 @@ class Window(Frame):
 		
 		self.hotkeyEntry = Entry(self)
 		self.hotkeyEntry.place(x=500, y=300)
-		
+
 	def ctrl_event(self):
 		self.hotkeyEntry.insert('end',"Ctrl");
 		
@@ -66,6 +66,14 @@ root = Tk();
 root.geometry("800x400")
 
 app = Window(root)
+
+root.protocol('WM_DELETE_WINDOW', root.iconify)
+
+menubar = Menu(root)
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Exit", command=root.destroy)
+menubar.add_cascade(label="File", menu=filemenu)
+root.config(menu=menubar)
 
 root.mainloop()
 
