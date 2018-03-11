@@ -12,7 +12,7 @@ COMP3000 Custom Keybind Application
 
 For isntalling new dependencies
 ```
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 For recently added modules to requirements.txt
