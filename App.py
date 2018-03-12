@@ -2,6 +2,7 @@ from pynput import keyboard
 from subprocess import call
 import os
 from Tkinter import *
+import helper
  
 currentKeys = list()
 cmd = ""
@@ -79,16 +80,7 @@ class Window(Frame):
 		
 		rawHotKeys = self.hotkeyEntry.get().split("-")
 		
-		for key in rawHotKeys:
-			if key == "Ctrl":
-				currentKeys.append(keyboard.Key.ctrl)
-			elif key == "Alt":
-				currentKeys.append(keyboard.Key.alt)
-			elif key == "Super":
-				currentKeys.append(keyboard.Key.cmd)
-			else:
-				currentKeys.append(keyboard.KeyCode.from_char(key))
-		
+		currentKeys = helper.convertToKeyCode(rawHotKeys)[:]	
 		
 		keybindObj = Keybind(currentKeys)
 		CustomKeyBindings[keybindObj] = cmd
