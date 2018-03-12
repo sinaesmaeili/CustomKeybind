@@ -1,13 +1,39 @@
 from pynput import keyboard
-from subprocess import call
+from pynput.keyboard import Controller
 import os
 from Tkinter import *
- 
+import thread
+
+current = set()
 currentKeys = list()
 cmd = ""
 keysID = 0
 
 CustomKeyBindings = {}
+
+# Controller for outputting text with keyboard
+controller = Controller()
+
+def listen_to_keyboard(string, delay):
+		def on_press(key):
+			# Checking if current key combination exists in COMBINATION structure
+			for i in CustomKeyBindings:
+				if key in i.keyList:
+					current.add(key)
+					if all(k in current for k in i.keyList):
+						controller.type(CustomKeyBindings[i])
+				if key == keyboard.Key.esc:
+					listener.stop()
+
+		def on_release(key):
+			try:
+				current.remove(key)
+			except KeyError:
+				pass
+
+		# Initializing keyboard listener
+		with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+			listener.join()	
 
 #Need to make a keybind object so it can be used as a dictionary key
 #Regular lists arent hashable 
@@ -96,14 +122,15 @@ class Window(Frame):
 		
 		self.commandEntry.delete(0, 'end')
 		self.hotkeyEntry.delete(0, 'end')		
-		
-				
-		
+
 	
+
+		
 root = Tk();
 root.geometry("800x400")
 
 app = Window(root)
+thread.start_new_thread(listen_to_keyboard, ('thread', 1))
 
 root.protocol('WM_DELETE_WINDOW', root.iconify)
 
@@ -115,10 +142,10 @@ root.config(menu=menubar)
 
 root.mainloop()
 
-for x in CustomKeyBindings:
-	print str(x.ID) + '---->' + CustomKeyBindings[x]
-	for key in x.keyList:
-		print str(key)
+# for x in CustomKeyBindings:
+# 	print str(x.ID) + '---->' + CustomKeyBindings[x]
+# 	for key in x.keyList:
+# 		print str(key)
 
 
 
