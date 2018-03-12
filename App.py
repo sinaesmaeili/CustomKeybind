@@ -3,8 +3,9 @@ from pynput.keyboard import Controller
 import os
 from Tkinter import *
 import thread
+import helper
 
-current = set()
+current = set() 
 currentKeys = list()
 cmd = ""
 keysID = 0
@@ -105,16 +106,7 @@ class Window(Frame):
 		
 		rawHotKeys = self.hotkeyEntry.get().split("-")
 		
-		for key in rawHotKeys:
-			if key == "Ctrl":
-				currentKeys.append(keyboard.Key.ctrl)
-			elif key == "Alt":
-				currentKeys.append(keyboard.Key.alt)
-			elif key == "Super":
-				currentKeys.append(keyboard.Key.cmd)
-			else:
-				currentKeys.append(keyboard.KeyCode.from_char(key))
-		
+		currentKeys = helper.convertToKeyCode(rawHotKeys)[:]	
 		
 		keybindObj = Keybind(currentKeys)
 		CustomKeyBindings[keybindObj] = cmd
