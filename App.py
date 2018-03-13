@@ -78,12 +78,18 @@ class Window(Frame):
 		
 		applyButton = Button(self, text = "Apply", command = self.apply_event)
 		applyButton.place(x=400, y=350)
+
+		clearButton = Button(self, text = "Clear", command = self.clear_event)
+		clearButton.place(x=550, y=350)
 		
 		commandLabel = Label(self, text = "Command: ")
 		commandLabel.place(x=350, y=150)
 		
 		instructionLabel = Label(self, text = "Seperate keys with '-'")
 		instructionLabel.place(x=350, y=250)
+
+		self.errorLabel = Label(self)
+		self.errorLabel.place(x=500, y=325)
 		
 		self.commandEntry = Entry(self)
 		self.commandEntry.place(x=430, y=150)
@@ -92,31 +98,42 @@ class Window(Frame):
 		self.hotkeyEntry.place(x=500, y=300)
 		
 	def ctrl_event(self):
-		self.hotkeyEntry.insert('end',"Ctrl-")
+		if "Ctrl" not in self.hotkeyEntry.get():
+			self.hotkeyEntry.insert('end',"Ctrl-")
 		
 	def alt_event(self):
-		self.hotkeyEntry.insert('end',"Alt-")
+		if "Alt" not in self.hotkeyEntry.get():
+			self.hotkeyEntry.insert('end',"Alt-")
 		
 	def super_event(self):
-		self.hotkeyEntry.insert('end',"Super-")
+		if "Super" not in self.hotkeyEntry.get():
+			self.hotkeyEntry.insert('end',"Super-")
 		
 	def apply_event(self):
 		global cmd
+		self.errorLabel.config(text = "")#Clear error message if any
+
 		cmd = self.commandEntry.get()
+		if cmd == "":
+			self.errorLabel.config(text = "Error, no command given")
+		
 		
 		rawHotKeys = self.hotkeyEntry.get().split("-")
 		
-		currentKeys = helper.convertToKeyCode(rawHotKeys)[:]	
+		currentKeys = helper.convertToKeyCode(rawHotKeys, self.errorLabel)[:]	
 		
-		keybindObj = Keybind(currentKeys)
-		CustomKeyBindings[keybindObj] = cmd
-		del currentKeys[:]
+		#If no errors present, proceed 
+		if(self.errorLabel["text"] == ""):
+			keybindObj = Keybind(currentKeys)
+			CustomKeyBindings[keybindObj] = cmd
+			del currentKeys[:]
 		
 		self.commandEntry.delete(0, 'end')
+		self.hotkeyEntry.delete(0, 'end')
+
+	def clear_event(self):
 		self.hotkeyEntry.delete(0, 'end')		
-
-	
-
+		self.errorLabel.config(text = "")
 		
 root = Tk();
 root.geometry("800x400")
@@ -134,10 +151,10 @@ root.config(menu=menubar)
 
 root.mainloop()
 
-# for x in CustomKeyBindings:
-# 	print str(x.ID) + '---->' + CustomKeyBindings[x]
-# 	for key in x.keyList:
-# 		print str(key)
+for x in CustomKeyBindings:
+	print str(x.ID) + '---->' + CustomKeyBindings[x]
+	for key in x.keyList:
+		print str(key)
 
 
 

@@ -1,7 +1,6 @@
 from pynput import keyboard
 
-def convertToKeyCode(rawKeys):
-
+def convertToKeyCode(rawKeys, errMsg):
 	keyCodeList = list()
 	for key in rawKeys:
 		if key == "Ctrl":
@@ -34,8 +33,13 @@ def convertToKeyCode(rawKeys):
 			keyCodeList.append(keyboard.Key.f11)
 		elif key == "F12" or key == "f12":
 			keyCodeList.append(keyboard.Key.f12)
+		elif len(key) > 1:
+			errMsg.config(text = "Error, invalid key: " + key)
 		else:
-			keyCodeList.append(keyboard.KeyCode.from_char(key))
+			if keyboard.KeyCode.from_char(key) not in keyCodeList:
+				keyCodeList.append(keyboard.KeyCode.from_char(key))
+			else:
+				errMsg.config(text = "Error, duplicate key: " + key)
 	
 	return keyCodeList
 
