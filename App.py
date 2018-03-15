@@ -22,7 +22,7 @@ def listen_to_keyboard(string, delay):
 				if key in i.keyList:
 					current.add(key)
 					if all(k in current for k in i.keyList):
-						controller.type(CustomKeyBindings[i])
+						os.system("gnome-terminal -e 'bash -c \"" + CustomKeyBindings[i]  + "; exec bash\"'")
 				if key == keyboard.Key.esc:
 					listener.stop()
 
