@@ -1,9 +1,23 @@
 from pynput import keyboard
 
-def convertToKeyCode(rawKeys, errMsg):
+
+class Keybind:
+	def __init__(self,keys):	
+		self.keyList = tuple(keys[:]);
+		
+	def __hash__(self):
+		return hash(self.keyList)
+		
+	def __eq__(self, other):
+		return self.keyList == other.keyList
+		
+	def __ne__(self, other):
+		return not(self == other)
+
+def convertToKeyCode(rawKeys, errMsg = None):
 	keyCodeList = list()
 	for key in rawKeys:
-		if key == "Ctrl":
+		if key == "Ctrl" or key == "Control":
 			keyCodeList.append(keyboard.Key.ctrl)
 		elif key == "Alt":
 			keyCodeList.append(keyboard.Key.alt)
@@ -33,13 +47,61 @@ def convertToKeyCode(rawKeys, errMsg):
 			keyCodeList.append(keyboard.Key.f11)
 		elif key == "F12" or key == "f12":
 			keyCodeList.append(keyboard.Key.f12)
+		elif key == "Shift":
+			keyCodeList.append(keyboard.Key.shift)
+		elif key == "Escape":
+			keyCodeList.append(keyboard.Key.esc)
+		elif key == "Down":
+			keyCodeList.append(keyboard.Key.down)
+		elif key == "Left":
+			keyCodeList.append(keyboard.Key.left)
+		elif key == "Right":
+			keyCodeList.append(keyboard.Key.right)
+		elif key == "Up":
+			keyCodeList.append(keyboard.Key.up)
+		elif key == "Tab":
+			keyCodeList.append(keyboard.Key.tab)
+		elif key == "space":
+			keyCodeList.append(keyboard.Key.space)
+		elif key == "Home":
+			keyCodeList.append(keyboard.Key.home)
+		elif key == "End":
+			keyCodeList.append(keyboard.Key.end)
 		elif len(key) > 1:
-			errMsg.config(text = "Error, invalid key: " + key)
-		else:
+			if errMsg: 
+				errMsg.config(text = "Error, invalid key: " + key)
+		else:#Single letter/number key, ex: 'a'
 			if keyboard.KeyCode.from_char(key) not in keyCodeList:
-				keyCodeList.append(keyboard.KeyCode.from_char(key))
-			else:
+				keyCodeList.append(keyboard.KeyCode.from_char(key.lower()))
+			elif errMsg:
 				errMsg.config(text = "Error, duplicate key: " + key)
 	
 	return keyCodeList
+
+def keyString_to_keyCode(rawKeys):
+	keyCodeList = list()	
+	tempStr = rawKeys.replace("[", "")
+	tempStr = tempStr.replace("]", "")
+	tempStr = tempStr.replace("'", "")
+	tempStr = tempStr.replace("<", "")
+	splitkeys = tempStr.split(",")
+	splitKeys = splitkeys[0].split(">")
+		
+	keyCodeList = convertToKeyCode(splitKeys)
+	
+	return keyCodeList
+
+def keyList_to_keyString(rawKeys):
+	keyString = "['"
+	
+	for key in rawKeys:
+
+		#If not last item
+		if key != rawKeys[-1]:
+			keyString += ("<" + key + ">")
+		else:
+			keyString += (key + "']")	
+	
+	return keyString		
+
 
