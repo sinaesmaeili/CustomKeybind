@@ -28,8 +28,8 @@ def listen_to_keyboard(string, delay):
 				if all(k in current for k in i.keyList):
 					print  KeybindDB.CustomKeyBindings[i] 
 					os.system("gnome-terminal -e 'bash -c \"" + KeybindDB.CustomKeyBindings[i]  + "; exec bash\"'")
-			if key == keyboard.Key.esc:
-				listener.stop()
+			#if key == keyboard.Key.esc:
+			#	listener.stop()
 
 	def on_release(key):
 		try:
@@ -191,10 +191,17 @@ class Window(Frame):
 		
 		keybindObj = helper.Keybind(currentKeys)
 
-		if keybindObj in KeybindDB.CustomKeyBindings:
+		#Possible overwrite
+		if keybindObj in KeybindDB.CustomKeyBindings or keybindObj in KeybindDB.ExistingKeyBindings :
 			self.errorLabel.config(text = "Error, keybind already exists")
-		elif keybindObj in KeybindDB.ExistingKeyBindings:
-			self.errorLabel.config(text = "Error, keybind already exists")
+
+			self.owButton = Button(self, text = "Overwrite", command =lambda: self.overwrite_event(keybindObj, cmd))
+			self.owButton.place(x=500, y=280)
+
+			self.cancelowButton = Button(self, text = "Cancel", command = self.canelOverwrite_event)
+			self.cancelowButton.place(x=600, y=280)		
+			
+			
 		
 		#If no errors present, proceed 
 		if(self.errorLabel["text"] == ""):
@@ -211,6 +218,24 @@ class Window(Frame):
 		self.commandEntry.delete(0, 'end')
 		self.hotkeyEntry.delete(0, 'end')
 
+	def overwrite_event(self, keybind, newCommand):
+		if keybind in KeybindDB.CustomKeyBindings:
+			KeybindDB.CustomKeyBindings[keybind] = newCommand
+			
+		elif keybind in KeybindDB.ExistingKeyBindings:
+			func = KeybindDB.ExistingKeyBindings[keybind]
+			KeybindDB.CustomKeyBindings[keybind] = newCommand
+			KeybindDB.ExistingKeyBindings[keybind] = newCommand
+			
+			os.system('gsettings set org.gnome.desktop.wm.keybindings ' + func + ' "'+ "['disabled']" + '"')
+			self.owButton.destroy()
+			self.cancelowButton.destroy()	
+				
+
+	def canelOverwrite_event(self):
+		self.owButton.destroy()
+		self.cancelowButton.destroy()	
+	
 	def clear_event(self):
 		self.hotkeyEntry.delete(0, 'end')		
 		self.errorLabel.config(text = "")

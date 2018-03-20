@@ -65,7 +65,7 @@ def GetAllSystemKeybinds():
 	for func in Dconf_functions:
 		shortcut = (subprocess.check_output(["gsettings", "get", "org.gnome.desktop.wm.keybindings", func])).rstrip()
 		keyBindObj = helper.Keybind(helper.keyString_to_keyCode(shortcut))
-		ExistingKeyBindings[keyBindObj] = "CMD: " + func
+		ExistingKeyBindings[keyBindObj] = func
 
 
 def GetAllCustomKeybinds():
