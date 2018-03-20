@@ -195,7 +195,7 @@ class Window(Frame):
 		if keybindObj in KeybindDB.CustomKeyBindings or keybindObj in KeybindDB.ExistingKeyBindings :
 			self.errorLabel.config(text = "Error, keybind already exists")
 
-			self.owButton = Button(self, text = "Overwrite", command =lambda: self.overwrite_event(keybindObj, cmd))
+			self.owButton = Button(self, text = "Overwrite", command=lambda:self.overwrite_event(keybindObj,rawHotKeys,cmd))
 			self.owButton.place(x=500, y=280)
 
 			self.cancelowButton = Button(self, text = "Cancel", command = self.canelOverwrite_event)
@@ -212,21 +212,30 @@ class Window(Frame):
 			keyBindsFile.write(stringtoWrite)
 			keyBindsFile.close()
 			
-			del currentKeys[:]
+		del currentKeys[:]
 
 		
 		self.commandEntry.delete(0, 'end')
 		self.hotkeyEntry.delete(0, 'end')
 
-	def overwrite_event(self, keybind, newCommand):
+	def overwrite_event(self, keybind, keylist, newCommand):
 		if keybind in KeybindDB.CustomKeyBindings:
+			#overwrite
 			KeybindDB.CustomKeyBindings[keybind] = newCommand
 			
 		elif keybind in KeybindDB.ExistingKeyBindings:
 			func = KeybindDB.ExistingKeyBindings[keybind]
+			
+			#overwrite
 			KeybindDB.CustomKeyBindings[keybind] = newCommand
 			KeybindDB.ExistingKeyBindings[keybind] = newCommand
 			
+			keyBindsFile = open("user-set_Keybinds.txt", "a")
+			stringtoWrite = helper.keyList_to_keyString(keylist) + ":" + cmd + "\n"
+			keyBindsFile.write(stringtoWrite)
+			keyBindsFile.close()
+			
+			#disable dconf 
 			os.system('gsettings set org.gnome.desktop.wm.keybindings ' + func + ' "'+ "['disabled']" + '"')
 			self.owButton.destroy()
 			self.cancelowButton.destroy()	
