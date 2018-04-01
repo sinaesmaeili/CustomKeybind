@@ -63,9 +63,6 @@ class Window(Frame):
 		superButton = Button(self, text = "Super", command = self.super_event)
 		superButton.place(x=75, y=285)	
 		
-		shiftButton = Button(self, text = "Shift", command = self.shift_event)
-		shiftButton.place(x=150, y=250)		
-		
 		escapeButton = Button(self, text = "Escape", command = self.escape_event)
 		escapeButton.place(x=5, y=250)	
 		
@@ -73,13 +70,13 @@ class Window(Frame):
 		tabButton.place(x=82, y=250)	
 		
 		spaceButton = Button(self, text = "Space", command = self.space_event)
-		spaceButton.place(x=5, y=215)	
+		spaceButton.place(x=40, y=215)	
 		
 		homeButton = Button(self, text = "Home", command = self.home_event)
-		homeButton.place(x=75, y=215)	
+		homeButton.place(x=110, y=215)	
 		
 		endButton = Button(self, text = "End", command = self.end_event)
-		endButton.place(x=150, y=215)	
+		endButton.place(x=150, y=250)	
 		
 		upButton = Button(self, text = "Up", command = self.up_event)
 		upButton.place(x=62, y=320)	
@@ -134,11 +131,7 @@ class Window(Frame):
 		
 	def super_event(self):
 		if "Super" not in self.hotkeyEntry.get():
-			self.hotkeyEntry.insert('end',"Super-")
-			
-	def shift_event(self):
-		if "Shift" not in self.hotkeyEntry.get():
-			self.hotkeyEntry.insert('end',"Shift-")
+			self.hotkeyEntry.insert('end',"Super-")		
 			
 	def escape_event(self):
 		if "Escape" not in self.hotkeyEntry.get():
@@ -270,9 +263,9 @@ root.config(menu=menubar)
 
 root.mainloop()
 
-for x in KeybindDB.CustomKeyBindings:
-	for key in x.keyList:
-		print str(key)
+#for x in KeybindDB.CustomKeyBindings:
+#	for key in x.keyList:
+#		print str(key)
 
 
 
