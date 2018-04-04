@@ -4,19 +4,28 @@ COMP3000 Custom Keybind Application
 ## Quick Start
 
 - Make sure modules are up to date (look at Installing and saving dev modules below)
-- Save program as executable: `pyinstaller test.py`
-- Traverse to `/dist/test` and run the executable
+- Save program as executable: `pyinstaller App.py`
+- Traverse to `/dist/App` and run the executable
+<br></br>
+- Or without running as executable simply type: `python App.py`
 
 
 ## Installing and saving dev modules
 
-For isntalling new dependencies
+### Ubuntu:
+
+Install Tkinter:
 ```
-pip install -r requirements.txt
+sudo apt-get install python-tk
 ```
 
-For recently added modules to requirements.txt
+For installing new dependencies:
 ```
-pip freeze > requirements.txt
+sudo pip install -r requirements.txt
+```
+
+For saving recently added modules to requirements.txt:
+```
+sudo pip freeze > requirements.txt
 ```
 
