@@ -262,12 +262,3 @@ menubar.add_cascade(label="File", menu=filemenu)
 root.config(menu=menubar)
 
 root.mainloop()
-
-#for x in KeybindDB.CustomKeyBindings:
-#	for key in x.keyList:
-#		print str(key)
-
-
-
-
-
