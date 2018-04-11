@@ -28,8 +28,6 @@ def listen_to_keyboard(string, delay):
 				if all(k in current for k in i.keyList):
 					print  KeybindDB.CustomKeyBindings[i] 
 					os.system("gnome-terminal -e 'bash -c \"" + KeybindDB.CustomKeyBindings[i]  + "; exec bash\"'")
-			#if key == keyboard.Key.esc:
-			#	listener.stop()
 
 	def on_release(key):
 		try:
@@ -99,23 +97,26 @@ class Window(Frame):
 		clearAllButton = Button(self, text = "Clear All Custom Keybinds", command = self.clearAll_event)
 		clearAllButton.place(x=500, y=350)
 		
-		commandLabel = Label(self, text = "Command: ")
-		commandLabel.place(x=300, y=150)
+		commandLabel = Label(self, text = "Command")
+		commandLabel.place(x=350, y=130)
 		
 		instructionLabel = Label(self, text = "Seperate keys with '-'")
-		instructionLabel.place(x=300, y=250)
+		instructionLabel.place(x=310, y=250)
 		
 		keyBankLabel = Label(self, text = "Standard Keys")
 		keyBankLabel.place(x=50,y=175)
 
-		hotKeyLabel = Label(self, text = "---->")
-		hotKeyLabel.place(x=250, y=300)		
+		arrowLabel = Label(self, text = "---->")
+		arrowLabel.place(x=250, y=300)		
+
+		keybindLabel = Label(self, text = "Keybind")
+		keybindLabel.place(x=350, y=320)	
 		
 		self.errorLabel = Label(self)
 		self.errorLabel.place(x=500, y=325)
 		
 		self.commandEntry = Entry(self)
-		self.commandEntry.place(x=380, y=150)
+		self.commandEntry.place(x=300, y=150)
 		
 		self.hotkeyEntry = Entry(self)
 		self.hotkeyEntry.place(x=300, y=300)
@@ -184,15 +185,18 @@ class Window(Frame):
 		
 		keybindObj = helper.Keybind(currentKeys)
 
-		#Possible overwrite
-		if keybindObj in KeybindDB.CustomKeyBindings or keybindObj in KeybindDB.ExistingKeyBindings :
-			self.errorLabel.config(text = "Error, keybind already exists")
+		if(self.errorLabel["text"] == ""):
 
-			self.owButton = Button(self, text = "Overwrite", command=lambda:self.overwrite_event(keybindObj,rawHotKeys,cmd))
-			self.owButton.place(x=500, y=280)
+			#Possible overwrite
+			if keybindObj in KeybindDB.CustomKeyBindings or keybindObj in KeybindDB.ExistingKeyBindings :
+				self.errorLabel.config(text = "Error, keybind already exists")
 
-			self.cancelowButton = Button(self, text = "Cancel", command = self.canelOverwrite_event)
-			self.cancelowButton.place(x=600, y=280)		
+				self.owButton = Button(self, text = "Overwrite", 
+				command=lambda:self.overwrite_event(keybindObj,rawHotKeys,cmd))
+				self.owButton.place(x=500, y=280)
+
+				self.cancelowButton = Button(self, text = "Cancel", command = self.canelOverwrite_event)
+				self.cancelowButton.place(x=600, y=280)		
 			
 			
 		
@@ -215,6 +219,11 @@ class Window(Frame):
 		if keybind in KeybindDB.CustomKeyBindings:
 			#overwrite
 			KeybindDB.CustomKeyBindings[keybind] = newCommand
+
+			keyBindsFile = open("user-set_Keybinds.txt", "a")
+			stringtoWrite = helper.keyList_to_keyString(keylist) + ":" + cmd + "\n"
+			keyBindsFile.write(stringtoWrite)
+			keyBindsFile.close()
 			
 		elif keybind in KeybindDB.ExistingKeyBindings:
 			func = KeybindDB.ExistingKeyBindings[keybind]
@@ -262,3 +271,9 @@ menubar.add_cascade(label="File", menu=filemenu)
 root.config(menu=menubar)
 
 root.mainloop()
+
+
+
+
+
+

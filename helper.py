@@ -70,7 +70,7 @@ def convertToKeyCode(rawKeys, errMsg = None):
 		elif len(key) > 1:
 			if errMsg: 
 				errMsg.config(text = "Error, invalid key: " + key)
-		else:#Single letter/number key, ex: 'a'
+		elif key != "":#Single letter/number key, ex: 'a'
 			if keyboard.KeyCode.from_char(key) not in keyCodeList:
 				keyCodeList.append(keyboard.KeyCode.from_char(key.lower()))
 			elif errMsg:
