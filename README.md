@@ -1,5 +1,5 @@
 # CustomKeybind
-COMP3000 Custom Keybind Application
+Custom Keybind Application
 
 ## Quick Start
 
